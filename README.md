@@ -1,0 +1,1 @@
+# git-auto-pull-clone-trigger
