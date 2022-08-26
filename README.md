@@ -1,5 +1,5 @@
 # Git Clone & Pull Automatic
-Trigger/script em PHP feito com o intuito de automatizar clone e pull automaticamente atráves de webhooks do github, ou seja, quando um push é efetuado no seu repositório, o trigger irá realizar o pull automaticamente onde você configurar.
+Trigger/script em PHP feito com o intuito de automatizar clone e pull atráves de webhooks do github, ou seja, quando um push é efetuado no seu repositório, o trigger será disparado e realizará o pull onde você configurar.
 
 Seu funcionamento atualmente é basico, consiste em configurar o repositório e apontar o webhook nas configurações do mesmo no github.
 
