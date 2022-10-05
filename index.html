@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <div>
+      <div>
+        <h4>Commit atual:</h4>
+        <h5>0 . 0 . 0 . 0</h5>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div id="bodyMain">
+      <div id="log">
+        <p>[04/10/2022 | 15:09:38] Test log in progres...</p>
+      </div>
+      <div id="lista">
+        <p>04 (Tue) 10 (Oct) 2022 | 15:14:09 - antoniovpires commited 3 files</p>
+        <p>04 (Tue) 10 (Oct) 2022 | 18:08:32 - fabioserrav commited 5 files</p>
+      </div>
+      <div id="botoes">
+        <button>Pull Changes</button>
+        <button id="revertBtn">Revert Last Commit</button>
+        <input type="number" id="numberCommits" value="1">
+      </div>
+    </div>
+  </main>
+</body>
+<script>
+  const numberCommits = document.getElementById('numberCommits')
+  const rBtn = document.getElementById('revertBtn')
+
+  numberCommits.addEventListener('change', function() {
+    rBtn.textContent = 'Revert Last ' + numberCommits.value + ' commits'
+  })
+</script>
+
+</html>
