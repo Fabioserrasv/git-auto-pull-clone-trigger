@@ -79,6 +79,10 @@ header div div h5 {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+button{
+    cursor: pointer;
+}
+
 #bodyMain {
   margin: auto;
   margin-top: 1rem;
@@ -129,11 +133,12 @@ header div div h5 {
   background-color: var(--color-scale-gray-2);
   border: none;
   color: var(--color-scale-gray-8);
+  margin-inline: 10px;
 }
 
 #numberCommits {
   height: 20%;
-  margin-left: -5rem;
+  margin-left: -2rem;
 }
 
 #revertBtn {

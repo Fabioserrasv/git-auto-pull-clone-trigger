@@ -1,42 +1,49 @@
 <?php
-try {
-    #Configuration
-    $rep_host = ""; # Nome do usuário host.
-    $rep_name = ""; # Nome do repositório.
-    $rep_branch = ""; # Nome da branch.
-    $localfolder = ""; # Nome da pasta que deseja clonar/pull.
-    $pat = getenv('PAT_GIT') . "@" ?? ""; # Caso o repositório seja publico, não é necessário pat.
-    $pass = getenv('AUTO_GIT_PASS') ?? ""; # Senha de segurança da route.
+require_once __DIR__ .  '/inc/config.php';
 
-    if (getenv("PHP_ENV") == 'prd') { # Validando ambiente, para ser utilizado em outros sistemas essa verificação irá mudar.
-        if (!isset($_GET['p'])) {
+#Configuration -> inc/config.php
+$rep_host = REP_HOST;
+$rep_name = REP_NAME;
+$rep_branch = REP_BRANCH;
+$localfolder = LOCALFOLDER;
+$pat = PAT;
+$pass = PASS;
+
+if (getenv("PHP_ENV") == 'prd') { # Validando ambiente, para ser utilizado em outros sistemas essa verificação irá mudar.
+    if (!isset($_GET['p'])) {
+        echo "Permission denied.";
+        die;
+    } else {
+        if ($_GET['p'] != $pass) { # Validando senha de segurança da route.
             echo "Permission denied.";
             die;
-        } else {
-            if ($_GET['p'] != $pass) { # Validando senha de segurança da route.
-                echo "Permission denied.";
-                die;
-            }
         }
     }
+}
 
+try {
     $resJson = [];
     $today = new DateTime('now', new DateTimeZone('America/Sao_Paulo')); # UTC -3
     $today = $today->format('d/m/Y H:i:s');
     $res = "[{$today}]:\n";
     $resJson["datetime"] = $today;
 
-    if (!file_exists($localfolder)) {
-        $b = ($rep_branch != "" ? "-b " : "");
-        $res .= exec_result("git clone {$b}{$rep_branch} https://{$pat}github.com/{$rep_host}/{$rep_name}.git {$localfolder}");
-        $resJson["command_exec"] = "git clone https://<PAT>github.com/{$rep_host}/{$rep_name}.git {$rep_branch}";
+    if (isset($_GET["revert"])) {
+        $res .= execResult("git -C {$localfolder}/ reset --hard HEAD~" . $_GET["revert"]);
+        $resJson["command_exec"] = "git -C {$localfolder}/ reset --hard HEAD~" . $_GET["revert"];
     } else {
-        $res .= exec_result("git -C {$localfolder}/ pull https://{$pat}github.com/{$rep_host}/{$rep_name}.git {$rep_branch}");
-        $resJson["command_exec"] = "git -C {$localfolder}/ pull https://<PAT>github.com/{$rep_host}/{$rep_name}.git {$rep_branch}";
+        if (!file_exists($localfolder)) {
+            $b = ($rep_branch != "" ? "-b " : "");
+            $res .= execResult("git clone {$b}{$rep_branch} https://{$pat}github.com/{$rep_host}/{$rep_name}.git {$localfolder}");
+            $resJson["command_exec"] = "git clone https://<PAT>github.com/{$rep_host}/{$rep_name}.git {$rep_branch}";
+        } else {
+            $res .= execResult("git -C {$localfolder}/ pull https://{$pat}github.com/{$rep_host}/{$rep_name}.git {$rep_branch}");
+            $resJson["command_exec"] = "git -C {$localfolder}/ pull https://<PAT>github.com/{$rep_host}/{$rep_name}.git {$rep_branch}";
+        }
     }
 
     $resJson["message"] = $res;
-    generate_logs($res, ($resJson));
+    generateLogs($res, ($resJson));
     echo "Done";
 } catch (Exception $e) {
     $today = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
@@ -45,10 +52,10 @@ try {
     $resJson["datetime"] = $today;
     $resJson["command_exec"] = "";
     $resJson["message"] = $e->getMessage();
-    generate_logs($res, ($resJson));
+    generateLogs($res, ($resJson));
     echo "Error";
 }
-function exec_result($command){
+function execResult($command) {
     $result = array();
     exec($command . " 2>&1", $result);
     $r = '';
@@ -57,24 +64,24 @@ function exec_result($command){
     }
     return $r;
 }
-function generate_logs($res, $resJson){
-    $old_content = '';
+function generateLogs($res, $resJson) {
+    $oldContent = '';
+    echo $res . "<br>";
     # 1 - Generate log file normally
     if (file_exists('./log_output.log')) {
-        $old_content = file_get_contents('./log_output.log');
+        $oldContent = file_get_contents('./log_output.log');
     }
     $fp = fopen("./log_output.log", "w");
-    fwrite($fp, $res . "\n" . $old_content);
+    fwrite($fp, $res . "\n" . $oldContent);
     fclose($fp);
     # 2 - Generate log file as json
     if (file_exists('./log_output.json')) {
-        $old_content = file_get_contents('./log_output.json');
-        $old_content = json_decode($old_content, true);
-        $old_content = array_reverse($old_content);
-        var_dump($old_content);
-        $old_content[] = $resJson;
-        $resJson = json_encode(array_reverse($old_content));
-    }else{
+        $oldContent = file_get_contents('./log_output.json');
+        $oldContent = json_decode($oldContent, true);
+        $oldContent = array_reverse($oldContent);
+        $oldContent[] = $resJson;
+        $resJson = json_encode(array_reverse($oldContent));
+    } else {
         $a = [];
         $a[] = $resJson;
         $resJson = json_encode($a);
