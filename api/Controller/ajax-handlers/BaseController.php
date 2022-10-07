@@ -11,7 +11,7 @@ class BaseController
  
     /**
      * Get URI elements.
-     * 
+     *
      * @return array
      */
     protected function getUriSegments()
@@ -24,7 +24,7 @@ class BaseController
  
     /**
      * Get querystring params.
-     * 
+     *
      * @return array
      */
     protected function getQueryStringParams()

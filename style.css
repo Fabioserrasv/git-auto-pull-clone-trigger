@@ -1,147 +1,183 @@
 :root {
-  --color-scale-black: #010409;
+    --color-scale-black: #010409;
 
-  --color-scale-white: #ffffff;
+    --color-scale-white: #ffffff;
 
-  --color-scale-gray-0: #f0f6fc;
+    --color-scale-gray-0: #f0f6fc;
 
-  --color-scale-gray-1: #c9d1d9;
+    --color-scale-gray-1: #c9d1d9;
 
-  --color-scale-gray-2: #b1bac4;
+    --color-scale-gray-2: #b1bac4;
 
-  --color-scale-gray-3: #8b949e;
+    --color-scale-gray-3: #8b949e;
 
-  --color-scale-gray-4: #6e7681;
+    --color-scale-gray-4: #6e7681;
 
-  --color-scale-gray-5: #484f58;
+    --color-scale-gray-5: #484f58;
 
-  --color-scale-gray-6: #30363d;
+    --color-scale-gray-6: #30363d;
 
-  --color-scale-gray-7: #21262d;
+    --color-scale-gray-7: #21262d;
 
-  --color-scale-gray-8: #161b22;
+    --color-scale-gray-8: #161b22;
 
-  --color-scale-gray-9: #0d1117;
+    --color-scale-gray-9: #0d1117;
 
-  --color-scale-blue-0: #cae8ff;
+    --color-scale-blue-0: #cae8ff;
 
-  --color-scale-blue-1: #a5d6ff;
+    --color-scale-blue-1: #a5d6ff;
 
-  --color-scale-blue-2: #79c0ff;
+    --color-scale-blue-2: #79c0ff;
 
-  --color-scale-blue-3: #58a6ff;
+    --color-scale-blue-3: #58a6ff;
 
-  --color-scale-blue-4: #388bfd;
+    --color-scale-blue-4: #388bfd;
 
-  --color-scale-blue-5: #1f6feb;
+    --color-scale-blue-5: #1f6feb;
 
-  --color-scale-blue-6: #1158c7;
+    --color-scale-blue-6: #1158c7;
 
-  --color-scale-blue-7: #0d419d;
+    --color-scale-blue-7: #0d419d;
 
-  --color-scale-blue-8: #0c2d6b;
+    --color-scale-blue-8: #0c2d6b;
 
-  --color-scale-blue-9: #051d4d;
+    --color-scale-blue-9: #051d4d;
 }
 
 body {
-  margin: auto;
-  height: 100vh;
-  background-color: var(--color-scale-gray-0);
+    margin: auto;
+    height: 100vh;
+    background-color: var(--color-scale-gray-0);
 }
 
 header {
-  background-color: var(--color-scale-gray-8);
-  display: flex;
-  width: 100%;
-  margin: auto;
-  height: 6vh;
-  justify-content: right;
+    background-color: var(--color-scale-gray-8);
+    display: flex;
+    width: 100%;
+    margin: auto;
+    height: 6vh;
+    justify-content: right;
 }
 
 header div {
-  display: grid;
-  margin-right: 20px;
+    display: grid;
+    margin-right: 20px;
 }
 
 header div div {
-  display: flex;
-  color: var(--color-scale-gray-2);
-  font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    color: var(--color-scale-gray-2);
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 header div div h4 {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 header div div h5 {
-  color: var(--color-scale-gray-2);
-  font-family: Arial, Helvetica, sans-serif;
+    color: var(--color-scale-gray-2);
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-button{
+button {
     cursor: pointer;
 }
 
 #bodyMain {
-  margin: auto;
-  margin-top: 1rem;
-  display: grid;
-  grid-template-columns: 40% auto;
-  grid-template-rows: 4fr 1fr;
-  grid-template-areas:
-    "log lista"
-    "log botoes";
-  gap: 20px;
-  height: 90vh;
-  width: 98vw;
+    margin: 0.5em;
+    display: grid;
+    grid-template-columns: 40% auto;
+    grid-template-rows: 4fr 1fr;
+    grid-template-areas:
+        "log lista"
+        "log botoes";
+    gap: 10px;
+    height: 90vh;
+    width: 98vw;
 }
 
 #log {
-  grid-area: log;
-  background-color: var(--color-scale-gray-8);
-  color: var(--color-scale-gray-2);
+    grid-area: log;
+    background-color: var(--color-scale-gray-8);
+    color: var(--color-scale-gray-2);
+    height: 100%;
+}
+
+p{
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+#log span{
+    color: rgba(0,255,0,0.5);
+}
+
+#lista span{
+    color: var(--color-scale-blue-7)
 }
 
 #lista {
-  grid-area: lista;
-  background-color: var(--color-scale-gray-2);
-  color: var(--color-scale-gray-8);
+    grid-area: lista;
+    background-color: var(--color-scale-gray-2);
+    color: var(--color-scale-gray-8);
+    height: 70vh;
+    width: 100%;
 }
+
+#lista::-webkit-scrollbar-track,
+#log::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+#lista::-webkit-scrollbar,
+#log::-webkit-scrollbar
+{
+	width: 5px;
+	background-color: var(--color-scale-gray-8);
+}
+
+#lista::-webkit-scrollbar-thumb,
+#log::-webkit-scrollbar-thumb
+{
+	background-color: var(--color-scale-gray-5);
+	border: 1px solid white;
+}
+
 
 #log,
 #lista {
-  padding: 10px;
-  border-radius: 10px;
-  height: 100%;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 10px;
+    border-radius: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    overflow-y: scroll;
 }
 
 #botoes {
-  grid-area: botoes;
-  display: flex;
-  width: 100%;
-  text-align: center;
-  margin-top: 1rem;
-  justify-content: space-evenly;
-  align-items: center;
+    grid-area: botoes;
+    display: flex;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 #botoes button {
-  height: 30%;
-  width: 30%;
-  background-color: var(--color-scale-gray-2);
-  border: none;
-  color: var(--color-scale-gray-8);
-  margin-inline: 10px;
+    height: 30%;
+    width: 30%;
+    background-color: var(--color-scale-gray-2);
+    border: none;
+    color: var(--color-scale-gray-8);
+    margin-inline: 10px;
 }
 
-#numberCommits {
-  height: 20%;
-  margin-left: -2rem;
+#revertCommitId {
+    height: 20%;
+    margin-left: -2rem;
 }
 
 #revertBtn {
-  color: var(--color-scale-gray-2) !important;
-  background-color: var(--color-scale-gray-8) !important;
+    color: var(--color-scale-gray-2) !important;
+    background-color: var(--color-scale-gray-8) !important;
 }

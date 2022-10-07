@@ -2,47 +2,143 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <header>
-    <div>
-      <div>
-        <h4>Commit atual:</h4>
-        <h5>0 . 0 . 0 . 0</h5>
-      </div>
-    </div>
-  </header>
+    <header>
+        <div>
+            <div>
+                <h4>Commit atual:</h4>
+                <h5>0 . 0 . 0 . 0</h5>
+            </div>
+        </div>
+    </header>
 
-  <main>
-    <div id="bodyMain">
-      <div id="log">
-        <p>[04/10/2022 | 15:09:38] Test log in progres...</p>
-      </div>
-      <div id="lista">
-        <p>04 (Tue) 10 (Oct) 2022 | 15:14:09 - antoniovpires commited 3 files</p>
-        <p>04 (Tue) 10 (Oct) 2022 | 18:08:32 - fabioserrav commited 5 files</p>
-      </div>
-      <div id="botoes">
-        <button>Pull Changes</button>
-        <button id="revertBtn">Revert Last Commit</button>
-        <input type="number" id="numberCommits" placeholder="Commits to Revert...">
-      </div>
-    </div>
-  </main>
+    <main>
+        <div id="bodyMain">
+            <div id="log">
+                <p>[04/10/2022 | 15:09:38] Test log in progres...</p>
+            </div>
+            <div id="lista">
+                <!-- <p>04 (Tue) 10 (Oct) 2022 | 15:14:09 - antoniovpires commited 3 files</p>
+                <p>04 (Tue) 10 (Oct) 2022 | 18:08:32 - fabioserrav commited 5 files</p> -->
+            </div>
+            <div id="botoes">
+                <button id="pullBtn">Pull Changes</button>
+                <button id="revertBtn">Revert to Commit</button>
+                <input type="text" id="revertCommitId" placeholder="Commit to Revert...">
+            </div>
+        </div>
+    </main>
 </body>
-<script>
-  const numberCommits = document.getElementById('numberCommits')
-  const rBtn = document.getElementById('revertBtn')
 
-  numberCommits.addEventListener('change', function() {
-    rBtn.textContent = 'Revert Last ' + numberCommits.value + ' commits'
-  })
+<script>
+    async function getLog() {
+        const amount = 30;
+        let response = await fetch('api/index.php/git/log/?p=ugOMs6M81&amount=' + amount);
+        let data = await response.json();
+        return data;
+    }
+
+    async function getCommits() {
+        const amount = 30;
+        let response = await fetch('api/index.php/git/commits/?p=ugOMs6M81&amount=' + amount);
+        let data = await response.json();
+        return data;
+    }
+
+    async function revertCommit(commit) {
+        if (!commit) return;
+        let response = await fetch('api/index.php/git/revert/?p=ugOMs6M81&commit=' + commit);
+        let data = await response.json();
+        return data;
+    }
+
+    async function pullChanges(){
+        let response = await fetch('api/index.php/git/pull/?p=ugOMs6M81&');
+        let data = await response.json();
+        return data;
+    }
+
+    function loadCommitsList() {
+        while (document.getElementById('lista').firstChild) {
+            document.getElementById('lista').firstChild.remove()
+        }
+        getCommits().then((response) => {
+            if (response.status == 200) {
+                JSON.parse(response.commits).forEach(commit => {
+                    if (commit == '') return;
+                    let x = commit.split(' -');
+                    document.getElementById('lista').insertAdjacentHTML("beforeend", '<p>[<span>'+x[0]+'</span>]' + x[1] +
+                        '</p>')
+                });
+            }
+        })
+    }
+
+    function loadLog() {
+        while (document.getElementById('log').firstChild) {
+            document.getElementById('log').firstChild.remove()
+        }
+        getLog().then((response) => {
+            console.log(response)
+            if (response.status == 200) {
+                (response.log).forEach(log => {
+                    if (log == '') return;
+                    let m = log.message.replace('\n', '<br>');
+                    document.getElementById('log').insertAdjacentHTML("beforeend",
+                        `<p><span>[${log.datetime}]</span> ${m}</p>`)
+                });
+            }
+        })
+    }
+</script>
+
+<script>
+    const commitRevertInput = document.getElementById('revertCommitId');
+    const rBtn = document.getElementById('revertBtn');
+    const pBtn = document.getElementById('pullBtn');
+    const logHtml = document.getElementById('log');
+
+    commitRevertInput.onchange = () => {
+        let com = commitRevertInput.value ? commitRevertInput.value : '';
+        document.getElementById('revertBtn').innerHTML = 'Revert to commit ' + com;
+    }
+
+    rBtn.onclick = () => {
+        if (commitRevertInput.value) {
+            revertCommit(commitRevertInput.value).then((response) => {
+                if (response.status == 200) {
+                    loadCommitsList();
+                    loadLog();
+                    commitRevertInput.value = '';
+                    commitRevertInput.dispatchEvent(new Event("change"));
+                }
+            })
+        }
+    }
+
+    pBtn.onclick = () => {
+        pullChanges().then((response) => {
+            if (response.status == 200) {
+                loadCommitsList();
+                loadLog();
+            }
+        })
+    }
+
+
+    loadCommitsList();
+    loadLog();
 </script>
 
 </html>

@@ -42,16 +42,65 @@ class Git extends Terminal {
         }
     }
 
-    public function revertChanges($amount) {
+    public function revertChanges($commit) {
         try {
-            if ($amount <= 0) {
-                return false;
+            if ($commit == '') {
+                return ['status' => false, 'message' => "You have to specify a commit."];
             }
-            $res = $this->execResult("git -C {$this->localfolder}/ reset --hard HEAD~" . $amount);
-            $resJson["command_exec"] = "git -C {$this->localfolder}/ reset --hard HEAD~" . $amount;
+            $res = $this->execResult("git -C {$this->localfolder}/ reset --hard " . $commit);
+            $resJson["command_exec"] = "git -C {$this->localfolder}/ reset --hard " . $commit;
 
             $this->generateLogs($res, $resJson);
             return ['status' => true, 'message' => $res];
+        } catch (Exception $e) {
+            $error = $e->getMessage();
+            $resJson["command_exec"] = "";
+            $resJson["message"] = $error;
+            $this->generateLogs($error, ($resJson));
+            return ['status' => false, 'message' => $error];
+        }
+    }
+
+    public function listCommits($amount) {
+        try {
+            if ($amount <= 0) {
+                return ['status' => false, 'message' => 'Amount cannot be negative.'];
+            }
+
+            if (file_exists($this->localfolder)) {
+                $res = $this->execResult("git -C {$this->localfolder}/ log --pretty=format:\"%h - %an, %ar : %s\" -{$amount}");
+                $res = explode("\n", $res);
+                $resJson["command_exec"] = "git reflog --pretty=format:\"%h - %an, %ar : %s\" -{$amount}";
+            } else {
+                return ['status' => false, 'message' => 'Directory not found.'];
+            }
+
+            //$this->generateLogs($res, $resJson);
+            return ['status' => true, 'message' => json_encode($res)];
+        } catch (Exception $e) {
+            $error = $e->getMessage();
+            $resJson["command_exec"] = "";
+            $resJson["message"] = $error;
+            $this->generateLogs($error, ($resJson));
+            return ['status' => false, 'message' => $error];
+        }
+    }
+
+    public function listLog($amount) {
+        try {
+            if ($amount <= 0) {
+                return ['status' => false, 'message' => 'Amount cannot be negative.'];
+            }
+
+            if (file_exists(PROJECT_ROOT_PATH . '/logs/log_output.log')) {
+                $content = file_get_contents(PROJECT_ROOT_PATH . '/logs/log_output.json');
+                $content = json_decode($content, true);
+            } else {
+                return ['status' => false, 'message' => 'No log file was found.'];
+            }
+
+            //$this->generateLogs($res, $resJson);
+            return ['status' => true, 'message' => ($content)];
         } catch (Exception $e) {
             $error = $e->getMessage();
             $resJson["command_exec"] = "";
