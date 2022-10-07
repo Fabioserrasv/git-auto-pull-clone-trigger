@@ -94,7 +94,7 @@ class Git extends Terminal {
 
             if (file_exists(PROJECT_ROOT_PATH . '/logs/log_output.log')) {
                 $content = file_get_contents(PROJECT_ROOT_PATH . '/logs/log_output.json');
-                $content = json_decode($content, true);
+                $content = array_slice(json_decode($content, true), 0, $amount);
             } else {
                 return ['status' => false, 'message' => 'No log file was found.'];
             }
