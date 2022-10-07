@@ -1,26 +1,28 @@
+const password = 'ugOMs6M81'; // password 
+
 async function getLog() {
     const amount = 30;
-    let response = await fetch('api/index.php/git/log/?p=ugOMs6M81&amount=' + amount);
+    let response = await fetch('api/index.php/git/log/?p='+password+'&amount=' + amount);
     let data = await response.json();
     return data;
 }
 
 async function getCommits() {
     const amount = 30;
-    let response = await fetch('api/index.php/git/commits/?p=ugOMs6M81&amount=' + amount);
+    let response = await fetch('api/index.php/git/commits/?p='+password+'&amount=' + amount);
     let data = await response.json();
     return data;
 }
 
 async function revertCommit(commit) {
     if (!commit) return;
-    let response = await fetch('api/index.php/git/revert/?p=ugOMs6M81&commit=' + commit);
+    let response = await fetch('api/index.php/git/revert/?p='+password+'&commit=' + commit);
     let data = await response.json();
     return data;
 }
 
 async function pullChanges() {
-    let response = await fetch('api/index.php/git/pull/?p=ugOMs6M81&');
+    let response = await fetch('api/index.php/git/pull/?p='+password+'&');
     let data = await response.json();
     return data;
 }
