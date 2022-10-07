@@ -2,6 +2,10 @@
 require_once(__DIR__ . "/inc/bootstrap.php");
 #Configuration -> inc/config.php
 
+// if (getenv("PHP_ENV") == "prd" && $_SERVER['REMOTE_ADDR'] != ""){ # Uma forma de proteger a aplicação
+//     die;
+// }
+
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = explode( '/', $uri );
 
