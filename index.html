@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Version Manager</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;1,700&display=swap"
@@ -16,9 +16,12 @@
 <body>
     <header>
         <div>
+            <h3>Repositório: <a target="_blank" id="repName">Repository</a>
+                <h3>
+        </div>
+        <div>
             <div>
-                <h4>Commit atual:</h4>
-                <h5>0 . 0 . 0 . 0</h5>
+                <h4 id="commitAtual">Commit atual: <small>0 . 0 . 0 . 0</small></h4>
             </div>
         </div>
     </header>
@@ -26,7 +29,7 @@
     <main>
         <div id="bodyMain">
             <div id="log">
-                <p>[04/10/2022 | 15:09:38] Test log in progres...</p>
+                <!-- <p>[04/10/2022 | 15:09:38] Test log in progres...</p> -->
             </div>
             <div id="lista">
                 <!-- <p>04 (Tue) 10 (Oct) 2022 | 15:14:09 - antoniovpires commited 3 files</p>
@@ -39,6 +42,25 @@
             </div>
         </div>
     </main>
+
+    <div class="bg-load"></div>
+
+    <div id="modal" class="d-none">
+        <div class="modal-header">
+            <div class="modal-title">
+                <h2 id="titulo-modal">Título</h2>
+            </div>
+        </div>
+        <div class="modal-body">
+            <p id="modal-message">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequatur saepe, aliquid
+                consectetur ab, asperiores totam animi quis cum officiis sit dolorum dolor necessitatibus distinctio
+                quibusdam vitae provident nobis modi hic.</p>
+        </div>
+        <div class="modal-footer">
+            <button id="cancelar">Cancelar</button>
+            <button id="confirmar">Confirmar</button>
+        </div>
+    </div>
 </body>
 
 <script>
@@ -63,7 +85,7 @@
         return data;
     }
 
-    async function pullChanges(){
+    async function pullChanges() {
         let response = await fetch('api/index.php/git/pull/?p=ugOMs6M81&');
         let data = await response.json();
         return data;
@@ -75,11 +97,19 @@
         }
         getCommits().then((response) => {
             if (response.status == 200) {
+                let first = true
+                document.getElementById('repName').innerHTML = response.repo
+                document.getElementById('repName').href = 'https://github.com/' + response.host + '/' + response
+                    .repo
                 JSON.parse(response.commits).forEach(commit => {
                     if (commit == '') return;
                     let x = commit.split(' -');
-                    document.getElementById('lista').insertAdjacentHTML("beforeend", '<p>[<span>'+x[0]+'</span>]' + x[1] +
+                    if (first) document.getElementById('commitAtual').innerHTML =
+                        'Commit Atual: <small>' + x[0] + '</small>';
+                    document.getElementById('lista').insertAdjacentHTML("beforeend", '<p>[<span>' + x[
+                            0] + '</span>]' + x[1] +
                         '</p>')
+                    first = false;
                 });
             }
         })
@@ -101,6 +131,25 @@
             }
         })
     }
+
+    function addClass(element, className) {
+        element.className += ' ' + className;
+    }
+
+    function removeClass(element, className) {
+        element.className = element.className.replace(
+            new RegExp('( |^)' + className + '( |$)', 'g'), ' ').trim();
+    }
+
+    function openModal(title, message, buttons) {
+        document.getElementById('titulo-modal').innerHTML = title;
+        document.getElementById('modal-message').innerHTML = message;
+        document.getElementById('cancelar').onclick = buttons[0]
+        document.getElementById('confirmar').onclick = buttons[1]
+
+        addClass(document.getElementsByClassName('bg-load')[0], 'active');
+        removeClass(document.getElementById('modal'), 'd-none')
+    }
 </script>
 
 <script>
@@ -115,25 +164,60 @@
     }
 
     rBtn.onclick = () => {
-        if (commitRevertInput.value) {
-            revertCommit(commitRevertInput.value).then((response) => {
-                if (response.status == 200) {
-                    loadCommitsList();
-                    loadLog();
-                    commitRevertInput.value = '';
-                    commitRevertInput.dispatchEvent(new Event("change"));
-                }
-            })
+        if (document.getElementById('revertCommitId').value == '') {
+            document.getElementById('revertCommitId').focus();
+            return;
         }
+        openModal(
+            'Atualização do Ambiente',
+            'Você realmente deseja reverter seu ambiente para o commit: ' + document.getElementById(
+                'revertCommitId').value + '?',
+            [
+                () => {
+                    removeClass(document.getElementsByClassName('bg-load')[0], 'active');
+                    addClass(document.getElementById('modal'), 'd-none')
+                },
+                () => {
+                    if (document.getElementById('revertCommitId').value) {
+                        revertCommit(document.getElementById('revertCommitId').value).then((response) => {
+                            if (response.status == 200) {
+                                loadCommitsList();
+                                loadLog();
+                                document.getElementById('revertCommitId').value = '';
+                                document.getElementById('revertCommitId').dispatchEvent(new Event(
+                                    "change"));
+                                removeClass(document.getElementsByClassName('bg-load')[0], 'active');
+                                addClass(document.getElementById('modal'), 'd-none')
+                            }
+                        })
+                    }
+                }
+            ]
+        )
     }
 
     pBtn.onclick = () => {
-        pullChanges().then((response) => {
-            if (response.status == 200) {
-                loadCommitsList();
-                loadLog();
-            }
-        })
+        openModal(
+            'Atualização do Ambiente',
+            'Você realmente deseja atualizar seu ambiente para versão mais recente?',
+            [
+                () => {
+                    removeClass(document.getElementsByClassName('bg-load')[0], 'active');
+                    addClass(document.getElementById('modal'), 'd-none')
+                },
+                () => {
+                    pullChanges().then((response) => {
+                        if (response.status == 200) {
+                            loadCommitsList();
+                            loadLog();
+                            removeClass(document.getElementsByClassName('bg-load')[0], 'active');
+                            addClass(document.getElementById('modal'), 'd-none')
+                        }
+                    })
+                }
+            ]
+        );
+
     }
 
 

@@ -94,7 +94,7 @@ class GitController extends BaseController{
 
         if (!$strErrorDesc) {
             $this->sendOutput(
-                json_encode(['status' => 200, "commits" => $responseData]) ,
+                json_encode(['status' => 200, "commits" => $responseData, "repo" => REP_NAME, "host" => REP_HOST]) ,
                 array('Content-Type: application/json', 'HTTP/1.1 200 OK')
             );
         } else {
