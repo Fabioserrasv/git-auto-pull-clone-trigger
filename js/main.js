@@ -1,6 +1,7 @@
 const commitRevertInput = document.getElementById('revertCommitId');
 const rBtn = document.getElementById('revertBtn');
 const pBtn = document.getElementById('pullBtn');
+const cBtn = document.getElementById('changeVarBtn');
 const logHtml = document.getElementById('log');
 
 commitRevertInput.onchange = () => {
@@ -11,6 +12,38 @@ commitRevertInput.onchange = () => {
 document.getElementsByClassName('bg-load')[0].onclick = () => {
     removeClass(document.getElementsByClassName('bg-load')[0], 'active');
     addClass(document.getElementById('modal'), 'd-none');
+}
+
+cBtn.onclick = () => {
+    openModal(
+        'Atualização do Ambiente',
+        'Configure as variáveis de ambiente da aplicação.',
+        [
+            () => {
+                removeClass(document.getElementsByClassName('bg-load')[0], 'active');
+                addClass(document.getElementById('modal'), 'd-none')
+            },
+            () => {
+                if (document.getElementById('rep_name').value) {
+                    let variables = [
+                        {name: 'rep_host', value: document.getElementById('rep_host').value},
+                        {name: 'rep_name', value: document.getElementById('rep_name').value},
+                        {name: 'rep_branch', value: document.getElementById('rep_branch').value},
+                        {name: 'localfolder', value: document.getElementById('localfolder').value}
+                    ];
+                    addOrModifyVariable(variables).then((response) => {
+                        if (response.status == 200) {
+                            loadCommitsList();
+                            loadLog();
+                            removeClass(document.getElementsByClassName('bg-load')[0], 'active');
+                            addClass(document.getElementById('modal'), 'd-none')
+                        }
+                    })
+                }
+            }
+        ],
+        true
+    )
 }
 
 rBtn.onclick = () => {

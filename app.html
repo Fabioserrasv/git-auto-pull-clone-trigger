@@ -16,8 +16,8 @@
 <body>
     <header>
         <div>
-            <h3>Repositório: <a target="_blank" id="repName">Repository</a>
-                <h3>
+            <h3>Repositório: <a target="_blank" id="repName">Repository</a></h3>
+            <h3>Branch: <a target="_blank" id="branchName">Branch</a></h3>
         </div>
         <div>
             <div>
@@ -36,6 +36,7 @@
                 <p>04 (Tue) 10 (Oct) 2022 | 18:08:32 - fabioserrav commited 5 files</p> -->
             </div>
             <div id="botoes">
+                <button id="changeVarBtn">⚒</button>
                 <button id="pullBtn">Pull Changes</button>
                 <button id="revertBtn">Revert to Commit</button>
                 <input type="text" id="revertCommitId" placeholder="Commit to Revert...">
@@ -55,12 +56,34 @@
             <p id="modal-message">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequatur saepe, aliquid
                 consectetur ab, asperiores totam animi quis cum officiis sit dolorum dolor necessitatibus distinctio
                 quibusdam vitae provident nobis modi hic.</p>
+            <div id="configInputs">
+                <div>
+                    <label for="">Repository Host</label>
+                    <input id="rep_host" type="text" />
+                </div>
+
+                <div>
+                    <label for="">Repository</label>
+                    <input id="rep_name" type="text" />
+                </div>
+
+                <div>
+                    <label for="">Branch</label>
+                    <input id="rep_branch" type="text" />
+                </div>
+
+                <div>
+                    <label for="">Localfolder</label>
+                    <input id="localfolder" type="text" />
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
             <button id="cancelar">Cancelar</button>
             <button id="confirmar">Confirmar</button>
         </div>
     </div>
+
 </body>
 
 <script src="js/functions.js"></script>

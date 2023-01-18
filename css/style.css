@@ -60,9 +60,13 @@ header {
 }
 
 header div:first-child {
-    display: grid;
+    display: flex;
     margin: 0 0 50px 20px;
     color: var(--color-scale-gray-1);
+}
+
+header div:first-child h3 {
+    margin-left: 10px;
 }
 
 header div:nth-child(2) {
@@ -182,6 +186,12 @@ p {
     align-items: center;
 }
 
+#changeVarBtn {
+    width: 5%;
+    color: var(--color-scale-gray-2) !important;
+    background-color: var(--color-scale-gray-5) !important;
+}
+
 button {
     height: 30%;
     width: 30%;
@@ -281,4 +291,16 @@ button {
 
 div[class*="bg-load"][class*="active"] {
     display: block !important;
+}
+
+#configInputs {
+    display: flex;
+    color: white;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+#configInputs div {
+    margin-bottom: 5px;
 }
