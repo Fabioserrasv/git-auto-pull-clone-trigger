@@ -116,8 +116,11 @@ function openModal(title, message, buttons, configModal = false) {
     document.getElementById('modal-message').innerHTML = message;
     document.getElementById('cancelar').onclick = buttons[0]
     document.getElementById('confirmar').onclick = buttons[1]
-
-    addClass(document.getElementById('configInputs'), 'd-none');
+    const configModals = document.getElementById('configInputs')
+    
+    if (!configModals.classList.contains('d-none')){
+        addClass(configModals, 'd-none');
+    }
 
     if (configModal){
         removeClass(document.getElementById('configInputs'), 'd-none');

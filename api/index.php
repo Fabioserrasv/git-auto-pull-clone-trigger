@@ -17,11 +17,7 @@ if ((isset($uri[3]) && ($uri[4] != 'git' && $uri[4] != 'config')) || !isset($uri
 require_once __DIR__ . "/Controller/ajax-handlers/GitController.php";
 require_once __DIR__ . "/Controller/ajax-handlers/ConfigController.php";
 
-if ($uri[4] == 'git') {
-    $controller = new GitController();
-}else if($uri[4] == 'config'){
-    $controller = new ConfigController();
-}
+$controller = new (ucfirst($uri[4]) . "Controller")();
 
 $strMethodName = $uri[5] . 'Action';
 $controller->{$strMethodName}();
